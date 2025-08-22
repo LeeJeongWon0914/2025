@@ -52,4 +52,3 @@ plt.ylim(0, 20)
 plt.ylabel("점수 (0~20)")
 plt.title("오늘 건강 체크 항목 점수")
 st.pyplot(plt)
-
