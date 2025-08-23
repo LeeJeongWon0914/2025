@@ -19,50 +19,38 @@ st.title("🩺 나만의 건강 체크리스트")
 # 0단계: 시작 화면
 if st.session_state.step == 0:
     st.write("당신의 오늘 하루 건강 상태를 간단하게 체크해보세요!")
-    with st.form("start"):
-        submitted = st.form_submit_button("시작하기 🚀")
-        if submitted:
-            next_step()
+    if st.button("시작하기 🚀"):
+        next_step()
 
 # 1단계: 물 섭취량
 elif st.session_state.step == 1:
-    with st.form("step1"):
-        st.session_state.answers["water"] = st.slider("💧 물 섭취 (ml, 목표 2000ml)", 0, 2000, 1000, step=100)
-        submitted = st.form_submit_button("다음 ➡️")
-        if submitted:
-            next_step()
+    st.session_state.answers["water"] = st.slider("💧 물 섭취 (ml, 목표 2000ml)", 0, 2000, 1000, step=100)
+    if st.button("다음 ➡️"):
+        next_step()
 
 # 2단계: 운동
 elif st.session_state.step == 2:
-    with st.form("step2"):
-        st.session_state.answers["exercise"] = st.slider("🏃 운동 시간 (분, 목표 30분)", 0, 120, 30, step=10)
-        submitted = st.form_submit_button("다음 ➡️")
-        if submitted:
-            next_step()
+    st.session_state.answers["exercise"] = st.slider("🏃 운동 시간 (분, 목표 30분)", 0, 120, 30, step=10)
+    if st.button("다음 ➡️"):
+        next_step()
 
 # 3단계: 수면
 elif st.session_state.step == 3:
-    with st.form("step3"):
-        st.session_state.answers["sleep"] = st.slider("🛌 수면 시간 (시간, 목표 8시간)", 0.0, 12.0, 7.0, step=0.5)
-        submitted = st.form_submit_button("다음 ➡️")
-        if submitted:
-            next_step()
+    st.session_state.answers["sleep"] = st.slider("🛌 수면 시간 (시간, 목표 8시간)", 0.0, 12.0, 7.0, step=0.5)
+    if st.button("다음 ➡️"):
+        next_step()
 
 # 4단계: 스트레스
 elif st.session_state.step == 4:
-    with st.form("step4"):
-        st.session_state.answers["stress"] = st.slider("😫 스트레스 정도 (0=전혀 없음, 10=매우 심함)", 0, 10, 5)
-        submitted = st.form_submit_button("다음 ➡️")
-        if submitted:
-            next_step()
+    st.session_state.answers["stress"] = st.slider("😫 스트레스 정도 (0=전혀 없음, 10=매우 심함)", 0, 10, 5)
+    if st.button("다음 ➡️"):
+        next_step()
 
 # 5단계: 과일/채소 섭취
 elif st.session_state.step == 5:
-    with st.form("step5"):
-        st.session_state.answers["veggie"] = st.slider("🥦 과일/채소 섭취 (회/일, 목표 5회)", 0, 10, 3)
-        submitted = st.form_submit_button("결과 보기 🎉")
-        if submitted:
-            next_step()
+    st.session_state.answers["veggie"] = st.slider("🥦 과일/채소 섭취 (회/일, 목표 5회)", 0, 10, 3)
+    if st.button("결과 보기 🎉"):
+        next_step()
 
 # 6단계: 결과
 elif st.session_state.step == 6:
@@ -88,7 +76,7 @@ elif st.session_state.step == 6:
     st.metric("오늘의 점수", f"{total_score} / 100")
     st.write(status)
 
-    # ✅ 카테고리별 점수 시각화
+    # 항목별 점수 시각화
     data = pd.DataFrame({
         "항목": ["물 섭취", "운동", "수면", "스트레스", "과일/채소"],
         "점수": [water_score, exercise_score, sleep_score, stress_score, veggie_score]
@@ -101,6 +89,18 @@ elif st.session_state.step == 6:
     ).properties(width=500, height=300)
 
     st.altair_chart(chart, use_container_width=True)
+
+    # 건강 팁 표시
+    if water_score < 15:
+        st.info("💧 물을 더 마셔보세요! 하루 2L 목표")
+    if exercise_score < 10:
+        st.info("🏃 운동량이 부족해요! 조금이라도 움직이세요")
+    if sleep_score < 10:
+        st.info("🛌 수면이 부족합니다. 규칙적인 수면을 추천")
+    if stress_score < 10:
+        st.info("😫 스트레스가 높아요. 잠깐 쉬어가는 시간 가져보세요")
+    if veggie_score < 10:
+        st.info("🥦 과일/채소 섭취가 부족해요! 균형 잡힌 식사 중요")
 
     # 다시하기 버튼
     if st.button("🔄 다시하기"):
