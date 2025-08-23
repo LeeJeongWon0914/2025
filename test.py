@@ -73,4 +73,34 @@ elif st.session_state.step == 6:
     else:
         status = "🟢 아주 좋아요! 건강 습관을 잘 지키고 있어요."
 
-    st.metric("오늘의 점수", f"{total_s_
+    st.metric("오늘의 점수", f"{total_score} / 100")
+    st.write(status)
+
+    # 항목별 점수 시각화
+    data = pd.DataFrame({
+        "항목": ["물 섭취", "운동", "수면", "스트레스", "과일/채소"],
+        "점수": [water_score, exercise_score, sleep_score, stress_score, veggie_score]
+    })
+    chart = alt.Chart(data).mark_bar(cornerRadiusTopLeft=10, cornerRadiusTopRight=10).encode(
+        x=alt.X("항목", sort=None),
+        y=alt.Y("점수", scale=alt.Scale(domain=[0, 20])),
+        color=alt.Color("항목", legend=None)
+    ).properties(width=500, height=300)
+    st.altair_chart(chart, use_container_width=True)
+
+    # ✅ 맞춤 건강 팁
+    if water_score < 15:
+        st.info("💧 물을 더 마셔보세요! 하루 2L 목표")
+    if exercise_score < 10:
+        st.info("🏃 운동량이 부족해요! 조금이라도 움직이세요")
+    if sleep_score < 10:
+        st.info("🛌 수면이 부족합니다. 규칙적인 수면을 추천")
+    if stress_score < 10:
+        st.info("😫 스트레스가 높아요. 잠깐 쉬어가는 시간을 가져보세요")
+    if veggie_score < 10:
+        st.info("🥦 과일/채소 섭취가 부족해요! 균형 잡힌 식사 중요")
+
+    # 다시하기 버튼
+    if st.button("🔄 다시하기"):
+        st.session_state.step = 0
+        st.session_state.answers = {}
