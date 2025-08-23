@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+import altair as alt
 
 st.set_page_config(page_title="나만의 건강 체크리스트", page_icon="🩺", layout="centered")
 
@@ -86,18 +88,21 @@ elif st.session_state.step == 6:
     st.metric("오늘의 점수", f"{total_score} / 100")
     st.write(status)
 
-    
-    # 추가 팁 제공
-    if water < 1500:
-        st.info("💧 물을 더 마셔보세요! 하루 2L가 이상적입니다.")
-    if exercise < 30:
-        st.info("🏃 운동량이 부족해요! 가벼운 산책이라도 해볼까요?")
-    if sleep < 6:
-        st.info("🛌 수면 시간이 짧습니다. 수면 루틴을 지켜보세요.")
+    # ✅ 카테고리별 점수 시각화
+    data = pd.DataFrame({
+        "항목": ["물 섭취", "운동", "수면", "스트레스", "과일/채소"],
+        "점수": [water_score, exercise_score, sleep_score, stress_score, veggie_score]
+    })
 
+    chart = alt.Chart(data).mark_bar(cornerRadiusTopLeft=10, cornerRadiusTopRight=10).encode(
+        x=alt.X("항목", sort=None),
+        y=alt.Y("점수", scale=alt.Scale(domain=[0, 20])),
+        color=alt.Color("항목", legend=None)
+    ).properties(width=500, height=300)
+
+    st.altair_chart(chart, use_container_width=True)
 
     # 다시하기 버튼
     if st.button("🔄 다시하기"):
         st.session_state.step = 0
         st.session_state.answers = {}
-
