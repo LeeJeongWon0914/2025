@@ -1,4 +1,4 @@
 streamlit
 pandas
 matplotlib
-sleep = st.slider("🛌 수면 시간 (시간, 최대 10시간)", 0.0, 10.0, 7.0, step=0.5)
+
